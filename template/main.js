@@ -73,24 +73,26 @@ const app = new Vue({
           email: this.registerEmail,
           firstName: this.registerFirstName,
           lastName: this.registerLastName,
-        }
-      }).then(response => {
-        console.log(response);
-        this.loginInput = this.registerUsername;
-        this.loginPassword = this.registerPassword;
-        this.login();
-      }).catch(error => {
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        }
-        console.log(error.config);
+        },
       })
+        .then((response) => {
+          console.log(response);
+          this.loginInput = this.registerUsername;
+          this.loginPassword = this.registerPassword;
+          this.login();
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log("Error", error.message);
+          }
+          console.log(error.config);
+        });
     },
     logout() {
       localStorage.clear();
@@ -100,7 +102,6 @@ const app = new Vue({
       this.currentPage = page;
     },
     renderMainPage() {
-      
       this.tasks = [];
       axios({
         url: this.server + "/tasks",
@@ -227,7 +228,7 @@ const app = new Vue({
           console.log(error.config);
         });
     },
-    addOrg(){
+    addOrg() {
       const name = this.organizationInput;
       let id;
       axios({
@@ -238,42 +239,42 @@ const app = new Vue({
         },
         data: {
           name,
-        }
+        },
       })
-      .then(response => {
-        // console.log(response);
-        id = response.data.id;
-        return axios({
-          url: this.server + "/selectOrg",
-          method: "PATCH",
-          headers: {
-            access_token: localStorage.access_token,
-          },
-          data: {
-            OrganizationId: id,
-          }
+        .then((response) => {
+          // console.log(response);
+          id = response.data.id;
+          return axios({
+            url: this.server + "/selectOrg",
+            method: "PATCH",
+            headers: {
+              access_token: localStorage.access_token,
+            },
+            data: {
+              OrganizationId: id,
+            },
+          });
         })
-      })
-      .then(response => {
-        // console.log(response);
-        this.organizationInput = "";
-        this.movePage("main-page");
-        this.renderMainPage();
-      })
-      .catch(error => {
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        }
-        console.log(error.config);
-      })
+        .then((response) => {
+          // console.log(response);
+          this.organizationInput = "";
+          this.movePage("main-page");
+          this.renderMainPage();
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log("Error", error.message);
+          }
+          console.log(error.config);
+        });
     },
-    selectOrg(){
+    selectOrg() {
       const id = this.organizationSelect;
       axios({
         url: this.server + "/selectOrg",
@@ -283,28 +284,27 @@ const app = new Vue({
         },
         data: {
           OrganizationId: id,
-        }
+        },
       })
-      .then(response => {
-        console.log(response);
-        this.organizationSelect = "";
-        this.movePage("main-page");
-        this.renderMainPage();
-      })
-      .catch(error => {
-        if (error.response) {
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          console.log(error.request);
-        } else {
-          console.log("Error", error.message);
-        }
-        console.log(error.config);
-      })
-    }
-
+        .then((response) => {
+          console.log(response);
+          this.organizationSelect = "";
+          this.movePage("main-page");
+          this.renderMainPage();
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log("Error", error.message);
+          }
+          console.log(error.config);
+        });
+    },
   },
   computed: {
     backlog() {

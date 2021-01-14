@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kanban</title>
+
+    <!--  Bootstrap CSS-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body class="bg-dark">
+    <div id="app">
+      <!----------------------------------- LOGIN ----------------------------------->
+      <div
+        class="container my-5 text-white"
+        id="login-page"
+        v-if="currentPage==='login'"
+      >
+        <h1>Login</h1>
+        <form>
+          <div class="mb-3">
+            <label for="login-input" class="form-label">Username / email</label>
+            <input
+              v-model="loginInput"
+              type="text"
+              class="form-control"
+              id="login-input"
+            />
+            <div id="emailHelp" class="form-text">
+              We'll never share your username / email with anyone else.
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="login-password" class="form-label">Password</label>
+            <input
+              v-model="loginPassword"
+              type="password"
+              class="form-control"
+              id="login-password"
+            />
+          </div>
+          <button
+            type="submit"
+            class="btn custom-color-1"
+            @click.prevent="login"
+          >
+            Login
+          </button>
+          <button
+            type="submit"
+            class="btn custom-color-3"
+            @click.prevent="movePage('register')"
+          >
+            Not Registered?
+          </button>
+        </form>
+      </div>
+
+      <!-------------------------------- END OF LOGIN -------------------------------->
+
+      <!----------------------------------- REGISTER ----------------------------------->
+      <div
+        class="container my-5 text-white"
+        id="register-page"
+        v-if="currentPage==='register'"
+      >
+        <h1>Register</h1>
+        <form>
+          <div class="mb-3">
+            <label for="register-username" class="form-label">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="register-username"
+              v-model="registerUsername"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="register-password" class="form-label">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="register-password"
+              v-model="registerPassword"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="register-email" class="form-label">Email</label>
+            <input
+              type="text"
+              class="form-control"
+              id="register-email"
+              v-model="registerEmail"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="register-firstName" class="form-label"
+              >First name</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="register-firstName"
+              v-model="registerFirstName"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="register-lastName" class="form-label">Last name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="register-lastName"
+              v-model="registerLastName"
+            />
+          </div>
+          <button
+            type="submit"
+            class="btn custom-color-1"
+            @click.prevent="register"
+          >
+            Register
+          </button>
+          <button
+            type="submit"
+            class="btn custom-color-3"
+            @click.prevent="movePage('login')"
+          >
+            Cancel
+          </button>
+        </form>
+      </div>
+
+      <!-------------------------------- END OF REGISTER -------------------------------->
+
+      <!----------------------------------- NAVBAR ----------------------------------->
+      <div id="main-page">
+        <nav
+          class="navbar navbar-expand navbar-dark bg-dark"
+          v-if="currentPage==='main-page' || currentPage==='organization'"
+        >
+          <div class="container-fluid justify-content-around">
+            <a class="navbar-brand" href="#">Kanban</a>
+            <div>
+              <ul class="navbar-nav">
+                <!-- <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    href="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#add-task-modal"
+                    >Add task</a
+                  >
+                </li> -->
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    href="#"
+                    @click.prevent="movePage('main-page')"
+                    >Tasks</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a
+                    class="nav-link"
+                    href="#"
+                    @click.prevent="renderOrganization"
+                    >Organization</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#" @click.prevent="logout"
+                    >Logout</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+
+        <!-------------------------------- END OF NAVBAR -------------------------------->
+
+        <!----------------------------------- ORGANIZATION ----------------------------------->
+        <div
+          class="container my-5 text-white"
+          id="register-page"
+          v-if="currentPage==='organization'"
+        >
+          <h1 class="text-center">Organization</h1>
+          <div class="container">
+            <div class="row">
+              <div class="col-6">
+                <form>
+                  <div class="mb-3">
+                    <label for="login-input" class="form-label"
+                      >Add new organization</label
+                    >
+                    <input
+                      v-model="organizationInput"
+                      type="text"
+                      class="form-control"
+                      id="login-input"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    class="btn custom-color-1"
+                    @click.prevent="addOrg"
+                  >
+                    Add
+                  </button>
+                </form>
+              </div>
+              <div class="col-6">
+                <form>
+                  <div class="mb-3">
+                    <label for="organization-input" class="form-label"
+                      >Select an organization</label
+                    >
+                    <select v-model="organizationSelect" class="form-select">
+                      <option
+                        v-for="org in organizations"
+                        :key="org.id"
+                        :value="org.id"
+                      >
+                        {{org.name}}
+                      </option>
+                    </select>
+                  </div>
+                  <button
+                    type="submit"
+                    class="btn custom-color-1"
+                    @click.prevent="selectOrg"
+                  >
+                    Select
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-------------------------------- END OF ORGANIZATION -------------------------------->
+
+        <!----------------------------------- TASKS ----------------------------------->
+        <div v-if="currentPage==='main-page'">
+          <div class="container my-4">
+            <div class="row">
+              <!----------------------------------- Backlog ----------------------------------->
+              <div class="col rounded custom-color-1 py-4 px-2 mx-2">
+                <h6 class="text-center mb-3">Backlog</h6>
+
+                <div v-for="task in backlog" :key="task.id">
+                  <div class="card my-1">
+                    <div class="card-body shadow">
+                      <h6 class="card-title">{{task.title}}</h6>
+                      <div class="d-flex justify-content-between row">
+                        <p
+                          class="card-text text-muted my-0 col align-middle"
+                          style="font-size: 12px"
+                        >
+                          By: {{task.User.username}}
+                        </p>
+                        <div class="col-4 align-bottom">
+                          <a
+                            class="link-dark text-decoration-none"
+                            href="#"
+                            @click.prevent="editTask(task.id)"
+                            >✎</a
+                          >
+                          <a
+                            class="link-dark text-decoration-none"
+                            href="#"
+                            @click.prevent="editTask(task.id)"
+                            >⇄</a
+                          >
+                          <a
+                            class="link-dark text-decoration-none"
+                            href="#"
+                            @click.prevent="deleteTask(task.id)"
+                            >⊗</a
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- <div class="card my-1 p-0"> -->
+                <div class="d-flex justify-content-center">
+                  <button
+                    type="submit"
+                    class="btn btn-outline-light w-100"
+                    @click.prevent="addFormBacklog()"
+                    v-if="showAddBtnBacklog"
+                  >
+                    +
+                  </button>
+                </div>
+                <!-- </div> -->
+
+                <div class="card" v-if="showAddFormBacklog">
+                  <div class="card-body shadow">
+                    <form>
+                      <div class="container d-flex justify-content-start p-0">
+                        <div class="row">
+                          <div class="col">
+                            <input
+                              type="text"
+                              class="form-control flex-grow-1"
+                              v-model="newBacklog"
+                              id="newBacklog"
+                            />
+                          </div>
+                          <div class="col-2 p-0">
+                            <button
+                              type="submit"
+                              class="btn btn-outline-dark"
+                              @click.prevent="addNewBacklog()"
+                            >
+                              +
+                            </button>
+                          </div>
+                          <div class="col-2 p-0">
+                            <button
+                              type="submit"
+                              class="btn btn-outline-danger"
+                              @click.prevent="cancelAddBacklog"
+                            >
+                              x
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <!----------------------------------- Todo ----------------------------------->
+              <div class="col rounded custom-color-2 py-4 px-2 mx-2">
+                <h6 class="text-center mb-3">Todo</h6>
+
+                <div v-for="task in todo" :key="task.id">
+                  <div class="card my-1">
+                    <div class="card-body shadow">
+                      <h6 class="card-title">{{task.title}}</h6>
+                      <div class="d-flex justify-content-between row">
+                        <p
+                          class="card-text text-muted my-0 col"
+                          style="font-size: 12px"
+                        >
+                          By: {{task.User.username}}
+                        </p>
+                        <div class="col-4 align-bottom">
+                          <a
+                            class="link-dark text-decoration-none"
+                            href="#"
+                            @click.prevent="editTask(task.id)"
+                            >✎</a
+                          >
+                          <a
+                            class="link-dark text-decoration-none"
+                            href="#"
+                            @click.prevent="editTask(task.id)"
+                            >⇄</a
+                          >
+                          <a
+                            class="link-dark text-decoration-none"
+                            href="#"
+                            @click.prevent="deleteTask(task.id)"
+                            >⊗</a
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!----------------------------------- Doing ----------------------------------->
+              <div class="col rounded custom-color-3 py-4 px-2 mx-2">
+                <h6 class="text-center mb-3">Doing</h6>
+
+                <div v-for="task in doing" :key="task.id">
+                  <div class="card my-1">
+                    <div class="card-body shadow">
+                      <h6 class="card-title">{{task.title}}</h6>
+                      <div class="d-flex justify-content-between row">
+                        <p
+                          class="card-text text-muted my-0 col"
+                          style="font-size: 12px"
+                        >
+                          By: {{task.User.username}}
+                        </p>
+                        <div class="col-4 align-bottom">
+                          <a
+                            class="link-dark text-decoration-none"
+                            href="#"
+                            @click.prevent="editTask(task.id)"
+                            >✎</a
+                          >
+                          <a
+                            class="link-dark text-decoration-none"
+                            href="#"
+                            @click.prevent="editTask(task.id)"
+                            >⇄</a
+                          >
+                          <a
+                            class="link-dark text-decoration-none"
+                            href="#"
+                            @click.prevent="deleteTask(task.id)"
+                            >⊗</a
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!----------------------------------- Done ----------------------------------->
+              <div class="col rounded custom-color-4 py-4 px-2 mx-2">
+                <h6 class="text-center mb-3">Done</h6>
+
+                <div v-for="task in done" :key="task.id">
+                  <div class="card my-1">
+                    <div class="card-body shadow">
+                      <h6 class="card-title">{{task.title}}</h6>
+                      <div class="d-flex justify-content-between row">
+                        <p
+                          class="card-text text-muted my-0 col"
+                          style="font-size: 12px"
+                        >
+                          By: {{task.User.username}}
+                        </p>
+                        <div class="col-4 align-bottom">
+                          <a
+                            class="link-dark text-decoration-none"
+                            href="#"
+                            @click.prevent="editTask(task.id)"
+                            >✎</a
+                          >
+                          <a
+                            class="link-dark text-decoration-none"
+                            href="#"
+                            @click.prevent="editTask(task.id)"
+                            >⇄</a
+                          >
+                          <a
+                            class="link-dark text-decoration-none"
+                            href="#"
+                            @click.prevent="deleteTask(task.id)"
+                            >⊗</a
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-------------------------------- END OF TASKS -------------------------------->
+      </div>
+      <!-------------------------------- END OF MAIN PAGE -------------------------------->
+    </div>
+    <!-------------------------------- END OF APP -------------------------------->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
