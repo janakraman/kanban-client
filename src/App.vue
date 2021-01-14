@@ -254,15 +254,21 @@ export default {
         })
         .catch((error) => {
           if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: error.response.data.message,
+              showConfirmButton: false,
+              timer: 2000,
+              timerProgressBar: true,
+              toast: true,
+              position: "top-right",
+            });
           } else if (error.request) {
             console.log(error.request);
           } else {
             console.log("Error", error.message);
           }
-          console.log(error.config);
         });
     },
     register(data) {
@@ -278,8 +284,16 @@ export default {
         .catch((error) => {
           if (error.response) {
             console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: error.response.data.message[0],
+              showConfirmButton: false,
+              timer: 2000,
+              timerProgressBar: true,
+              toast: true,
+              position: "top-right",
+            });
           } else if (error.request) {
             console.log(error.request);
           } else {
@@ -308,15 +322,21 @@ export default {
         })
         .catch((error) => {
           if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: error.response.data.message[0],
+              showConfirmButton: false,
+              timer: 2000,
+              timerProgressBar: true,
+              toast: true,
+              position: "top-right",
+            });
           } else if (error.request) {
             console.log(error.request);
           } else {
             console.log("Error", error.message);
           }
-          console.log(error.config);
         });
     },
     checkAuthTask(id) {
@@ -359,14 +379,34 @@ export default {
         .catch((error) => {
           if (error.response) {
             console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            if(typeof error.response.data.message === "string"){
+              Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: error.response.data.message,
+              showConfirmButton: false,
+              timer: 2000,
+              timerProgressBar: true,
+              toast: true,
+              position: "top-right",
+            });
+            } else {
+              Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: error.response.data.message[0],
+              showConfirmButton: false,
+              timer: 2000,
+              timerProgressBar: true,
+              toast: true,
+              position: "top-right",
+            });
+            }
           } else if (error.request) {
             console.log(error.request);
           } else {
             console.log("Error", error.message);
           }
-          console.log(error.config);
         });
     },
     deleteTask(id) {
@@ -399,9 +439,16 @@ export default {
         })
         .catch((error) => {
           if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: error.response.data.message,
+              showConfirmButton: false,
+              timer: 2000,
+              timerProgressBar: true,
+              toast: true,
+              position:"top-right",
+            });
           } else if (error.request) {
             console.log(error.request);
           } else {
@@ -474,15 +521,21 @@ export default {
         })
         .catch((error) => {
           if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: error.response.data.message[0],
+              showConfirmButton: false,
+              timer: 2000,
+              timerProgressBar: true,
+              toast: true,
+              position: "top-right",
+            });
           } else if (error.request) {
             console.log(error.request);
           } else {
             console.log("Error", error.message);
           }
-          console.log(error.config);
         });
     },
     selectOrg() {
@@ -505,20 +558,27 @@ export default {
         })
         .catch((error) => {
           if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Please select an organization",
+              showConfirmButton: false,
+              timer: 2000,
+              timerProgressBar: true,
+              toast: true,
+              position: "top-right",
+            });
           } else if (error.request) {
             console.log(error.request);
           } else {
             console.log("Error", error.message);
           }
-          console.log(error.config);
         });
     },
   },
   created() {
     this.checkAuth();
+
     // this.fetchTasks();
     // this.fetchCategories();
   },
