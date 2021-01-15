@@ -168,7 +168,7 @@ export default {
   data() {
     return {
       message: "Hello World",
-      server: "http://localhost:3000",
+      server: "https://kanban-jan-server.herokuapp.com",
       currentPage: "",
       currentUser: {},
       tasks: [],
@@ -351,6 +351,10 @@ export default {
     },
     logout() {
       localStorage.clear();
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log("User signed out.");
+      });
       this.checkAuth();
     },
     addNewTask(data) {
@@ -591,7 +595,7 @@ export default {
         },
       })
         .then((response) => {
-          console.log(response);
+          // console.log(response);
           // this.organizationSelect = "";
           this.movePage("main-page");
           this.fetchTasks();
