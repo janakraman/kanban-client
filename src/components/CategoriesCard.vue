@@ -1,14 +1,14 @@
 <template>
-  <div class="col rounded custom-color-1 py-4 px-2 mx-2">
+  <div class="col rounded py-4 px-2 mx-2" :class="this.colorClass">
     <h6 class="text-center mb-3">{{ category.name }}</h6>
 
     <div>
       <task-card v-for="task in tasks" 
     :key="task.id"
     :task="task"
-    :taskAuth="taskAuth"
+    :currentUser="currentUser"
     :categories="categories"
-    @checkAuthTask="checkAuthTask"
+    @unauthorizedAlert="unauthorizedAlert"
     @editTask="editTask"
     @deleteTask="deleteTask"
     ></task-card>
@@ -82,7 +82,7 @@ export default {
   components: {
     TaskCard,
   },
-  props: ["category", "tasks", "newTask", "taskAuth", "categories"],
+  props: ["category", "tasks", "newTask", "currentUser", "categories", "categoryId"],
   methods: {
     addTaskForm() {
       // console.log(this.category.name, this.category.id);
@@ -104,6 +104,9 @@ export default {
       this.showAddTaskForm = false;
       this.newTask = "";
     },
+    unauthorizedAlert(){
+      this.$emit("unauthorizedAlert")
+    },
     editTask(data){
       this.$emit("editTask", data)
     },
@@ -114,6 +117,11 @@ export default {
       this.$emit("deleteTask", id)
     }
 
+  },
+  computed:{
+    colorClass(){
+      return "custom-color-"+ this.categoryId;
+    }
   }
 };
 </script>

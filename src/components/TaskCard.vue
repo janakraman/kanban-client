@@ -14,15 +14,15 @@
             <a
               class="link-dark text-decoration-none"
               href="#"
-              @click.prevent="showEditTask(task.id)"
+              @click.prevent="showEditTask()"
               >✎</a
             >
-            <!-- <a
+            <a
               class="link-dark text-decoration-none"
               href="#"
-              @click.prevent="changeCategoryTask(task.id)"
+              @click.prevent="showChangeCategoryTask()"
               >⇄</a
-            > -->
+            >
             <a
               class="link-dark text-decoration-none"
               href="#"
@@ -46,15 +46,6 @@
                   v-model="taskTitle"
                   id="taskTitle"
                 />
-                <select v-model="categoryId" class="form-select">
-                      <option
-                        v-for="category in categories"
-                        :key="category.id"
-                        :value="category.id"
-                      >
-                        {{category.name}}
-                      </option>
-                    </select>
               </div>
               <div class="col-2 p-0">
                 <button
@@ -85,58 +76,122 @@
         </p>
       </div>
     </div>
+
+    <div class="card my-1" v-if="changeCategoryTaskCard">
+      <div class="card-body shadow">
+        <form>
+          <div class="container d-flex justify-content-center p-0">
+            <div class="row">
+              <div class="col-7">
+                <select v-model="categoryId" class="form-select">
+                  <option
+                    v-for="category in categories"
+                    :key="category.id"
+                    :value="category.id"
+                  >
+                    {{ category.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="col p-0">
+                <button
+                  type="submit"
+                  class="btn btn-outline-dark"
+                  @click.prevent="changeCategoryTask(task.id)"
+                >
+                  +
+                </button>
+              </div>
+              <div class="col p-0">
+                <button
+                  type="submit"
+                  class="btn btn-outline-danger"
+                  @click.prevent="cancelEditTask"
+                >
+                  x
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <p
+          class="card-text text-muted my-0 col align-middle"
+          style="font-size: 12px"
+        >
+          By: {{ task.User.username }}
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "TaskCard",
-  props: ["task", "taskAuth", "categories"],
-  data(){
+  props: ["task", "currentUser", "categories"],
+  data() {
     return {
       taskTitle: this.task.title,
       defaultTaskCard: true,
       editTaskCard: false,
-      categoryId: this.task.CategoryId
-    }
+      changeCategoryTaskCard: false,
+      categoryId: this.task.CategoryId,
+    };
   },
   methods: {
-    // checkAuthTask(id){
-    //   this.$emit("checkAuthTask", id);
-    // },
-    showEditTask(id){
-      this.taskTitle = this.task.title;
-      this.defaultTaskCard = false;
-      this.editTaskCard = true;
+    showEditTask() {
+      if (this.task.UserId === this.currentUser.id) {
+        this.taskTitle = this.task.title;
+        this.defaultTaskCard = false;
+        this.editTaskCard = true;
+      } else {
+        this.$emit("unauthorizedAlert");
+      }
     },
-    editTask(id){
+    editTask(id) {
       // console.log(this.taskTitle, id, this.task.CategoryId);
       const data = {
         id,
         title: this.taskTitle,
-        CategoryId: this.categoryId
-      }
+        CategoryId: this.categoryId,
+      };
       this.$emit("editTask", data);
       this.cancelEditTask();
     },
-    cancelEditTask(){
+    showChangeCategoryTask(id){
+      if (this.task.UserId === this.currentUser.id) {
+        this.defaultTaskCard = false;
+        this.changeCategoryTaskCard = true;
+      } else {
+        this.$emit("unauthorizedAlert");
+      }
+    },
+    changeCategoryTask(id){
+      const data = {
+        id,
+        title: this.taskTitle,
+        CategoryId: this.categoryId,
+      };
+      this.$emit("editTask", data);
+      this.cancelEditTask();
+    },
+    cancelEditTask() {
       this.defaultTaskCard = true;
       this.editTaskCard = false;
-      this.categoryId = this.task.CategoryId
+      this.changeCategoryTaskCard = false;
+      this.categoryId = this.task.CategoryId;
     },
     deleteTask(id) {
-      this.$emit("deleteTask", id);
+      if (this.task.UserId === this.currentUser.id) {
+        this.$emit("deleteTask", id);
+      } else {
+        this.$emit("unauthorizedAlert");
+      }
+      
     },
   },
   computed: {
-    // test(){
-    //   if(taskAuth === 'authorized'){
-    //     console.log("yes");
-    //   }else {
-    //     console.log("nope");
-    //   }
-    // }
-  }
+  },
 };
 </script>
 

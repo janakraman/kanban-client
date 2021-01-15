@@ -122,15 +122,16 @@
             <categories-card
               v-for="(category, i) in categoriesArr"
               :key="category.id"
+              :categoryId="category.id"
               :tasks="tasksArr[i]"
               :category="category"
               :categories="categoriesArr"
+              :currentUser="currentUser"
               @addNewTask="addNewTask"
-              @checkAuthTask="checkAuthTask"
+              @unauthorizedAlert="unauthorizedAlert"
               @editTask="editTask"
               @deleteTask="deleteTask"
               :newTask="newTask"
-              :taskAuth="taskAuth"
             >
             </categories-card>
 
@@ -166,6 +167,7 @@ export default {
       message: "Hello World",
       server: "http://localhost:3000",
       currentPage: "",
+      currentUser: {},
       tasks: [],
       categories: [],
       newTask: "",
@@ -181,6 +183,31 @@ export default {
     CategoriesCard,
   },
   methods: {
+    fetchUser() {
+      axios({
+        url: this.server + "/user",
+        method: "GET",
+        headers: {
+          access_token: localStorage.access_token,
+        },
+      })
+        .then(({ data }) => {
+          this.currentUser = data.user;
+          this.organizationSelect = data.user.Organization.id;
+        })
+        .catch((error) => {
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log("Error", error.message);
+          }
+          console.log(error.config);
+        });
+    },
     fetchTasks() {
       axios({
         url: this.server + "/tasks",
@@ -191,7 +218,7 @@ export default {
       })
         .then(({ data }) => {
           this.tasks = data;
-          this.organizationSelect = data[0].OrganizationId;
+          // this.organizationSelect = data[0].OrganizationId;
         })
         .catch((error) => {
           if (error.response) {
@@ -237,6 +264,7 @@ export default {
         this.movePage("main-page");
         this.fetchCategories();
         this.fetchTasks();
+        this.fetchUser();
       }
     },
     movePage(page) {
@@ -339,24 +367,17 @@ export default {
           }
         });
     },
-    checkAuthTask(id) {
-      axios({
-        url: this.server + "/tasks/auth/" + id,
-        method: "GET",
-        headers: {
-          access_token: localStorage.access_token,
-        },
-      })
-        .then(({ data }) => {
-          // console.log(response);
-          this.taskAuth = data.message;
-          // console.log(this.taskAuth);
-        })
-        .catch((error) => {
-          // console.log(error.response.data.message);
-          this.taskAuth = error.response.data.message;
-          // console.log(this.taskAuth);
-        });
+    unauthorizedAlert(){
+      Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Unauthorized",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                toast: true,
+                position: "top-right",
+              });
     },
     editTask(data) {
       const id = data.id;
@@ -379,28 +400,28 @@ export default {
         .catch((error) => {
           if (error.response) {
             console.log(error.response.data);
-            if(typeof error.response.data.message === "string"){
+            if (typeof error.response.data.message === "string") {
               Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: error.response.data.message,
-              showConfirmButton: false,
-              timer: 2000,
-              timerProgressBar: true,
-              toast: true,
-              position: "top-right",
-            });
+                icon: "error",
+                title: "Oops...",
+                text: error.response.data.message,
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                toast: true,
+                position: "top-right",
+              });
             } else {
               Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: error.response.data.message[0],
-              showConfirmButton: false,
-              timer: 2000,
-              timerProgressBar: true,
-              toast: true,
-              position: "top-right",
-            });
+                icon: "error",
+                title: "Oops...",
+                text: error.response.data.message[0],
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                toast: true,
+                position: "top-right",
+              });
             }
           } else if (error.request) {
             console.log(error.request);
@@ -447,7 +468,7 @@ export default {
               timer: 2000,
               timerProgressBar: true,
               toast: true,
-              position:"top-right",
+              position: "top-right",
             });
           } else if (error.request) {
             console.log(error.request);
@@ -552,7 +573,7 @@ export default {
       })
         .then((response) => {
           console.log(response);
-          this.organizationSelect = "";
+          // this.organizationSelect = "";
           this.movePage("main-page");
           this.fetchTasks();
         })
