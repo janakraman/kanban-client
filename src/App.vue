@@ -168,7 +168,6 @@ export default {
   data() {
     return {
       message: "Hello World",
-      // server: "http://localhost:3000",
       server: "https://server-kanban-jan.herokuapp.com",
       currentPage: "",
       currentUser: {},
