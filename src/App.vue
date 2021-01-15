@@ -220,7 +220,6 @@ export default {
       })
         .then(({ data }) => {
           this.tasks = data;
-          // this.organizationSelect = data[0].OrganizationId;
         })
         .catch((error) => {
           if (error.response) {
@@ -302,13 +301,9 @@ export default {
         });
     },
     loginWithGoogle() {
-      // console.log("ini login google");
       this.$gAuth
         .signIn()
         .then((GoogleUser) => {
-          // on success do something
-          // console.log("GoogleUser", GoogleUser);
-          // console.log(GoogleUser.Bc);
           return axios({
             method: "POST",
             url: this.server + "/loginGoogle",
@@ -623,9 +618,6 @@ export default {
   },
   created() {
     this.checkAuth();
-
-    // this.fetchTasks();
-    // this.fetchCategories();
   },
   computed: {
     categoriesArr() {

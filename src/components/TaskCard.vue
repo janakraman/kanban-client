@@ -149,7 +149,6 @@ export default {
       }
     },
     editTask(id) {
-      // console.log(this.taskTitle, id, this.task.CategoryId);
       const data = {
         id,
         title: this.taskTitle,

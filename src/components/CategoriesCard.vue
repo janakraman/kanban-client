@@ -85,10 +85,8 @@ export default {
   props: ["category", "tasks", "currentUser", "categories", "categoryId"],
   methods: {
     addTaskForm() {
-      // console.log(this.category.name, this.category.id);
       this.showAddTaskBtn = false;
       this.showAddTaskForm = true;
-      // this.renderMainPage();
     },
     addNewTask() {
       console.log(this.newTask);
