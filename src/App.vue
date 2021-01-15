@@ -6,7 +6,11 @@
       id="login-page"
       v-if="currentPage === 'login'"
     >
-      <login-form @login="login" @movePage="movePage"></login-form>
+      <login-form
+        @login="login"
+        @loginWithGoogle="loginWithGoogle"
+        @movePage="movePage"
+      ></login-form>
     </div>
     <!-------------------------------- END OF LOGIN -------------------------------->
 
@@ -131,7 +135,6 @@
               @unauthorizedAlert="unauthorizedAlert"
               @editTask="editTask"
               @deleteTask="deleteTask"
-              :newTask="newTask"
             >
             </categories-card>
 
@@ -170,7 +173,6 @@ export default {
       currentUser: {},
       tasks: [],
       categories: [],
-      newTask: "",
       taskAuth: "",
       organizationInput: "",
       organizationSelect: "",
@@ -299,6 +301,28 @@ export default {
           }
         });
     },
+    loginWithGoogle() {
+      // console.log("ini login google");
+      this.$gAuth
+        .signIn()
+        .then((GoogleUser) => {
+          // on success do something
+          // console.log("GoogleUser", GoogleUser);
+          // console.log(GoogleUser.Bc);
+          return axios({
+            method: "POST",
+            url: this.server + "/loginGoogle",
+            data: GoogleUser.Bc,
+          });
+        })
+        .then((response) => {
+          localStorage.access_token = response.data.access_token;
+          this.checkAuth();
+        })
+        .catch((error) => {
+          console.log("error", error);
+        });
+    },
     register(data) {
       axios({
         url: this.server + "/register",
@@ -367,17 +391,17 @@ export default {
           }
         });
     },
-    unauthorizedAlert(){
+    unauthorizedAlert() {
       Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Unauthorized",
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true,
-                toast: true,
-                position: "top-right",
-              });
+        icon: "error",
+        title: "Oops...",
+        text: "Unauthorized",
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        toast: true,
+        position: "top-right",
+      });
     },
     editTask(data) {
       const id = data.id;

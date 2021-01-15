@@ -82,7 +82,7 @@ export default {
   components: {
     TaskCard,
   },
-  props: ["category", "tasks", "newTask", "currentUser", "categories", "categoryId"],
+  props: ["category", "tasks", "currentUser", "categories", "categoryId"],
   methods: {
     addTaskForm() {
       // console.log(this.category.name, this.category.id);
@@ -97,7 +97,7 @@ export default {
         CategoryId: this.category.id
       }
       this.$emit("addNewTask", data);
-      // this.cancelAddTask;
+      this.cancelAddTask();
     },
     cancelAddTask() {
       this.showAddTaskBtn = true;
